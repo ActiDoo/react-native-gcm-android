@@ -62,6 +62,7 @@ public class MainReactPackage implements ReactPackage {
     @Override
     public List<ViewManager> createViewManagers(ReactApplicationContext reactContext) {
         return Arrays.<ViewManager>asList(
+                /*
                 new ReactDrawerLayoutManager(),
                 new ReactHorizontalScrollViewManager(),
                 new ReactImageManager(),
@@ -78,5 +79,6 @@ public class MainReactPackage implements ReactPackage {
                 new ReactVirtualTextViewManager(),
                 new SwipeRefreshLayoutManager(),
                 new ReactWebViewManager());
+                */
     }
 }
