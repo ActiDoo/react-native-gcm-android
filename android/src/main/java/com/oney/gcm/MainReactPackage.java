@@ -78,7 +78,9 @@ public class MainReactPackage implements ReactPackage {
                 new ReactTextInlineImageViewManager(),
                 new ReactVirtualTextViewManager(),
                 new SwipeRefreshLayoutManager(),
-                new ReactWebViewManager());
+                new ReactWebViewManager()
                 */
+        );
+
     }
 }
