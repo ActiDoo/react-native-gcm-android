@@ -19,7 +19,10 @@ import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
+import com.google.android.gms.gcm.GoogleCloudMessaging;
+import com.google.android.gms.iid.InstanceID;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -85,8 +88,8 @@ public class GcmModule extends ReactContextBaseJavaModule implements LifecycleEv
 
     private void sendEvent(String eventName, Object params) {
         getReactApplicationContext()
-            .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
-            .emit(eventName, params);
+                .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
+                .emit(eventName, params);
     }
 
     private void listenGcmRegistration() {
@@ -161,6 +164,26 @@ public class GcmModule extends ReactContextBaseJavaModule implements LifecycleEv
     public void requestPermissions() {
         getReactApplicationContext().startService(new Intent(getReactApplicationContext(), GcmRegistrationService.class));
     }
+
+    @ReactMethod
+    public void abandonPermissions() {
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                String packageName = getCurrentActivity().getApplication().getPackageName();
+                int resourceId = getCurrentActivity().getApplication().getResources().getIdentifier("gcm_defaultSenderId", "string", packageName);
+                String projectNumber = getReactApplicationContext().getString(resourceId);
+                try{
+                    InstanceID.getInstance(getReactApplicationContext()).deleteToken(projectNumber, GoogleCloudMessaging.INSTANCE_ID_SCOPE);
+                }catch(IOException e){
+                    Log.d(TAG, "IOException: " + e.toString());
+                }
+            }
+        }).start();
+
+    }
+
     @ReactMethod
     public void stopService() {
         if (mIntent != null) {
